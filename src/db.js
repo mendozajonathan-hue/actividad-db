@@ -1,15 +1,17 @@
-import pkg from 'pg';
+import pkg from "pg";
 const { Pool } = pkg;
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
+// 🔹 Cargar variables de entorno desde .env (solo en local)
 dotenv.config();
 
+// 🔹 Crear conexión con Postgres (Render + local)
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL, // Render te da esta variable
-  ssl: { rejectUnauthorized: false, }
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false
 });
 
-// Crear tabla si no existe
+// 🔹 Crear tabla si no existe
 (async () => {
   try {
     await pool.query(`
